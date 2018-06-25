@@ -91,7 +91,7 @@ Contains code snippets which are:
 #include <string.h>
 
 #include <stdio.h>
-
+#include "coap_request.h"
 
 static void handle_reset(lwm2m_context_t * contextP,
                          void * fromSessionH,
@@ -117,6 +117,10 @@ static uint8_t handle_request(lwm2m_context_t * contextP,
     uriP = uri_decode(contextP->altPath, message->uri_path);
 #else
     uriP = uri_decode(NULL, message->uri_path);
+    if(NULL == uriP && message->code == COAP_GET)
+    {
+        return coap_file_get(contextP, uriP, fromSessionH, message, response);
+    }
 #endif
 
     if (uriP == NULL) return COAP_400_BAD_REQUEST;
@@ -241,9 +245,11 @@ void lwm2m_handle_packet(lwm2m_context_t * contextP,
             /* get offset for blockwise transfers */
             if (coap_get_header_block2(message, &block_num, NULL, &block_size, &block_offset))
             {
+                printf("[%s][%d] block_num : %lu, block_size : %lu, block_offset : %lu\n", __FUNCTION__, __LINE__, block_num, (uint32_t)block_size, block_offset);
                 LOG_ARG("Blockwise: block request %u (%u/%u) @ %u bytes", block_num, block_size, REST_MAX_CHUNK_SIZE, block_offset);
                 block_size = MIN(block_size, REST_MAX_CHUNK_SIZE);
                 new_offset = block_offset;
+                printf("[%s][%d] block_size : %lu, new_offset : %lu\n", __FUNCTION__, __LINE__, (uint32_t)block_size, new_offset);
             }
 
             /* handle block1 option */

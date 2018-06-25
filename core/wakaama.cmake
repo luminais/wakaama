@@ -21,6 +21,8 @@ set(WAKAAMA_SOURCES
     ${WAKAAMA_SOURCES_DIR}/data.c
     ${WAKAAMA_SOURCES_DIR}/list.c
     ${WAKAAMA_SOURCES_DIR}/packet.c
+    ${WAKAAMA_SOURCES_DIR}/coap_request.c
+    ${WAKAAMA_SOURCES_DIR}/coap_request.h
     ${WAKAAMA_SOURCES_DIR}/transaction.c
     ${WAKAAMA_SOURCES_DIR}/registration.c
     ${WAKAAMA_SOURCES_DIR}/bootstrap.c
